@@ -1,36 +1,56 @@
 #include <fstream>
 using namespace std;
-ifstream fin("1.in");
-ofstream fout("1.out");
-int s[1000],x,y=0,a1,a2;
+ifstream fin("input.in");
+ofstream fout("input.out");
+int s[100], a, b, y;
+void init(int k)
+{
+	if (k == 1)
+		s[k] = 0;
+	else
+		s[k] = s[k - 1] - 1;
+}
+int succesor(int k)
+{
+	if (s[k] < 9)
+	{
+		s[k] -= -1;
+		return 1;
+	}
+	return 0;
+}
+int valid(int k)
+{
+	return 1;
+}
+int solutie(int k)
+{
+	return k == 6;
+}
+void tipar(int k)
+{
+	if (s[1] == s[2] || s[2] == s[3] || s[3] == s[4] || s[4] == s[5] || s[5] == s[6]) {
+		int suma = 0;
+		for (int i = 1; i <= k; i++)
+			suma = suma * 10 + s[i];
+		if (suma >= a && suma <= b)
+			y++;
+	}
+}
+void bkt(int k)
+{
+	init(k);
+	while (succesor(k))
+		if (valid(k))
+			if (solutie(k))
+				tipar(k);
+			else
+				bkt(k + 1);
+}
 int main()
 {
-    fin>>a1>>a2;
-    for(int i=a1;i<=a2;i++)
-    {
-        x=i;
-        int r=0,ok=0,ok1=0;
-        while(x)
-        {
-            r=r*10+x%10;
-            x/=10;
-        }
-        int m=r;
-        while(m>9&&!ok1)
-        {
-            if(m%10<m%100)
-                ok1=1;
-            m/=10;
-        }
-        while(r>9&&!ok)
-        {
-            if(r%10==r%100)
-                ok=1;
-            r/=10;
-        }
-        if(ok&&ok1)
-            y++;
-    }
-    fout<<y;
-    return 0;
+	fin >> a >> b;
+	bkt(1);
+	fout << y;
+	return 0;
 }
